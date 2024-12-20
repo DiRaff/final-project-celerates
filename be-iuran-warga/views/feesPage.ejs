@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fees Management</title>
+</head>
+<body>
+  <h1>Fees Management</h1>
+
+  <!-- Create Fee Form -->
+  <form action="/fees" method="POST">
+    <h2>Create Fee</h2>
+    <label>Category ID:</label>
+    <input type="number" name="categories_id" required />
+    <label>Pemilik Iuran:</label>
+    <input type="text" name="pemilik_iuran" required />
+    <label>Deskripsi:</label>
+    <input type="text" name="deskripsi" required />
+    <label>Jenis Iuran:</label>
+    <input type="text" name="jenis_iuran" required />
+    <label>Jumlah Iuran:</label>
+    <input type="number" name="jumlah_iuran" required />
+    <button type="submit">Create</button>
+  </form>
+
+  <!-- Fees List -->
+  <h2>Fees List</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Category ID</th>
+        <th>Pemilik Iuran</th>
+        <th>Deskripsi</th>
+        <th>Jenis Iuran</th>
+        <th>Jumlah Iuran</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% fees.forEach(fee => { %>
+      <tr>
+        <td><%= fee.fees_id %></td>
+        <td><%= fee.categories_id %></td>
+        <td><%= fee.pemilik_iuran %></td>
+        <td><%= fee.deskripsi %></td>
+        <td><%= fee.jenis_iuran %></td>
+        <td><%= fee.jumlah_iuran %></td>
+        <td>
+          <!-- Update Fee Form -->
+          <form action="/fees/<%= fee.fees_id %>?_method=PUT" method="POST" style="display:inline;">
+            <input type="text" name="pemilik_iuran" value="<%= fee.pemilik_iuran %>" required />
+            <input type="text" name="deskripsi" value="<%= fee.deskripsi %>" required />
+            <input type="text" name="jenis_iuran" value="<%= fee.jenis_iuran %>" required />
+            <input type="number" name="jumlah_iuran" value="<%= fee.jumlah_iuran %>" required />
+            <button type="submit">Update</button>
+          </form>
+          <!-- Delete Fee -->
+          <form action="/api/fees/<%= fee.fees_id %>?_method=DELETE" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

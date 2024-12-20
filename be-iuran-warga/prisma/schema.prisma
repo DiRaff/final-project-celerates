@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  email_verified_at DateTime?
+  password     String
+  nama         String
+  tanggal_lahir DateTime
+  jenis_kelamin String
+  role         String
+  alamat       String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  categories   Category[]
+}
+
+model User {
+  user_id      Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  email_verified_at DateTime?
+  password     String
+  nama         String
+  tanggal_lahir DateTime
+  jenis_kelamin String
+  role         String
+  alamat       String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  categories   Category[]
+}
+
+model Category {
+  categories_id Int      @id @default(autoincrement())
+  admin_id      Int
+  user_id       Int
+  namaCategories String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  
+  admin         Admin    @relation(fields: [admin_id], references: [id], map: "Category_admin_id_fkey")
+  user          User     @relation(fields: [user_id], references: [user_id], map: "Category_user_id_fkey")
+  fees          Fee[]
+  finances      Finance[]
+  officers      Officer[]
+  residences    Residence[]
+}
+
+
+model Fee {
+  fees_id       Int      @id @default(autoincrement())
+  categories_id Int
+  pemilik_iuran String
+  deskripsi     String
+  jenis_iuran   String
+  jumlah_iuran  Float
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  category      Category @relation(fields: [categories_id], references: [categories_id], onDelete: Cascade)
+}
+
+model Finance {
+  finances_id   Int      @id @default(autoincrement())
+  categories_id Int
+  nama_penyetor String
+  deskripsi     String
+  jumlah_setoran Float
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  category      Category @relation(fields: [categories_id], references: [categories_id])
+}
+
+model Officer {
+  officers_id   Int      @id @default(autoincrement())
+  categories_id Int
+  nama_petugas  String
+  status_petugas String
+  jenis_kelamin String
+  nomor_ktp     String
+  alamat        String
+  pangkat       String
+  nomor_hp      String
+  tempat_tugas  String
+  detail_tugas  String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  category      Category @relation(fields: [categories_id], references: [categories_id])
+}
+
+model Residence {
+  residences_id Int      @id @default(autoincrement())
+  categories_id Int
+  nama_penghuni String
+  status_penghuni String
+  nomor_ktp     String
+  nomor_hp      String
+  nomor_blok    String
+  nomor_rumah   String
+  rw            String
+  rt            String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  category      Category @relation(fields: [categories_id], references: [categories_id])
+}
